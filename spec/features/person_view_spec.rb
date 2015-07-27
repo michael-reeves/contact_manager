@@ -58,7 +58,7 @@ describe 'the person view', type: :feature do
     end
 
     it 'deletes a phone number' do
-      phone     = person.phone_numbers.first
+      phone = person.phone_numbers.first
 
       first(:link, 'delete').click
       expect(current_path).to eq person_path(person)
@@ -113,6 +113,21 @@ describe 'the person view', type: :feature do
       expect(current_path).to eq person_path(person)
       expect(page).to have_content('john@yahoo.com')
       expect(page).not_to have_content(old_email)
+    end
+
+    it 'has links to delete email addresses' do
+      person.email_addresses.each do |email|
+        expect(page).to have_link('delete', href: email_address_path(email))
+      end
+    end
+
+    it 'deletes an email address' do
+      email = person.email_addresses.first
+
+      first(:link, 'delete').click
+      expect(current_path).to eq person_path(person)
+      expect(page).not_to have_content(email.address)
+      expect(page).to     have_content('john.doe@gmail.com')
     end
 
   end
